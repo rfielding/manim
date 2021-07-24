@@ -6,3 +6,7 @@ The goal is to create all the auto-created mp4 chunks here, and get them into iM
 for final editing (adding music, voiceover, and video camera input).
 
 3Blue1Brown is holding a competition to help make this kind of video, and probably manim specifically, take off in popularity.
+
+```
+./runit MainScene && ./showit MainScene
+```

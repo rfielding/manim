@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vlc media/videos/scenes/720p30/$1.mp4

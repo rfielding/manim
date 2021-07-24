@@ -1,5 +1,4 @@
 #!/bin/bash
 
 mkdir manim
-docker run --rm -it  --user="$(id -u):$(id -g)" -v "$(pwd)":/manim manimcommunity/manim manim scenes.py MainScene -qm
-docker run --rm -it  --user="$(id -u):$(id -g)" -v "$(pwd)":/manim manimcommunity/manim manim scenes.py MovingScene -qm
+docker run --rm -it  --user="$(id -u):$(id -g)" -v "$(pwd)":/manim manimcommunity/manim manim scenes.py $1 -qm
