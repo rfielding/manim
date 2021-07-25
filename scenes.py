@@ -1,5 +1,7 @@
 from manim import *
+import math
 
+            
 class Xput(Scene):
     def construct(self):
         # Throughput
@@ -7,18 +9,87 @@ class Xput(Scene):
             r"\underbrace{X_n}_{n\ \text{Worker Throughput}} = \frac{1}{T_n} = \frac{n\ \gamma}{1 + \alpha (n - 1) + \beta\ n(n - 1)}"
         )
         self.play(Write(form5))
-        self.play(Wait(1))
+        self.play(Wait(5))
         form5.scale(0.5)
         form5.to_corner(UP + RIGHT)
+
+        self.meetings(5)
+
+        blist = BulletedList(
+            "Number of clients in the system is Load",
+            "Throughput as a function of load is the most important metric",
+            "X[n] is \"Mean Throughput at Load\"",
+            "Amdahl's Law represents the simple throughput limitation"
+        )
+        blist.scale(0.5)
+        self.add(blist)
+        self.play(Wait(10))
+        self.play(FadeOut(blist))    
 
         # show a graph of how this behaves in general
         # create the axes and the curve
         ax = Axes(x_range=[-1, 10], y_range=[-1, 10])
-        graph = ax.get_graph(lambda n: (n * 1)/(1 + (1.0/7)*(n-1) + 0*n*(n-1)), color=BLUE, x_range=[0, 100])
-        self.add(ax, graph)
+        graphLinear = ax.get_graph(lambda n: n, color=PINK, x_range=[0,100])
+        graphLimit = ax.get_graph(lambda n: 7, color=RED, x_range=[0,100])
+        graphAmdahl = ax.get_graph(lambda n: (n * 1)/(1 + (1.0/7)*(n-1) + 0*n*(n-1)), color=BLUE, x_range=[0, 100])
+        self.add(ax, graphLimit, graphLinear, graphAmdahl)
+        self.play(Wait(10))
+        self.play(FadeOut(graphLimit))
+        self.play(FadeOut(graphAmdahl))
+        self.play(FadeOut(graphLinear))
+
+        self.usl(ax,7,100,1.0)
+        self.usl(ax,7,100,2.0)
+        self.usl(ax,14,100,2.0)
+        self.usl(ax,14,200,2.0)
+        self.usl(ax,14,200,1.0)
+        self.usl(ax,14,800,1.0)
+        self.usl(ax,28,800,1.0)
 
         self.play(Wait(15))
 
+    def meetings(self, n):
+        participants = []
+        edges = []
+        for i in range(0,n):
+            r = 1
+            c = r*math.cos(math.pi * i * 2.0 / n)
+            s = r*math.sin(math.pi * i * 2.0 / n)
+            for j in range(0,n):
+                c2 = r*math.cos(math.pi * j * 2.0 / n)
+                s2 = r*math.sin(math.pi * j * 2.0 / n)
+                edges.append(Line(np.array([c,s,0]), np.array([c2,s2,0])))
+                self.add(edges[j])
+
+        for i in range(0,n):
+            r = 1
+            c = r*math.cos(math.pi * i * 2.0 / n)
+            s = r*math.sin(math.pi * i * 2.0 / n)
+            participants.append(Square(color=BLUE, fill_opacity=1))
+            participants[i].scale(0.05)
+            participants[i].shift(c*RIGHT + s*UP)
+            self.add(participants[i])
+
+        explain = MathTex(r"\beta n(n-1)")
+        self.add(explain)
+        explain.shift(3*LEFT)
+
+        for i in range(0,len(edges)):
+          self.play(FadeOut(edges[i]))
+        for i in range(0,len(participants)):
+          self.play(FadeOut(participants[i]))
+        self.play(FadeOut(explain))
+
+    def usl(self, ax,ai,bi,g):
+        # Show a beta term
+        newParams = MathTex(r"\gamma = %f, \alpha = \frac{1}{%d}, \beta = \frac{1}{%d}" % (g, ai, bi))
+        graphAmdahl2 = ax.get_graph(lambda n: (n * g)/(1 + (1.0/ai)*(n-1) + (1.0/bi)*n*(n-1)), color=BLUE, x_range=[0, 100])
+        graphLinear = ax.get_graph(lambda n: n*g, color=PINK, x_range=[0,100])
+        self.add(graphAmdahl2,newParams,graphLinear)
+        self.play(Wait(2))
+        self.play(FadeOut(graphAmdahl2))
+        self.play(FadeOut(newParams))
+        self.play(FadeOut(graphLinear))
 
 class MainScene(Scene):
     def construct(self):
