@@ -1,5 +1,25 @@
 from manim import *
 
+class Xput(Scene):
+    def construct(self):
+        # Throughput
+        form5 = MathTex(
+            r"\underbrace{X_n}_{n\ \text{Worker Throughput}} = \frac{1}{T_n} = \frac{n\ \gamma}{1 + \alpha (n - 1) + \beta\ n(n - 1)}"
+        )
+        self.play(Write(form5))
+        self.play(Wait(1))
+        form5.scale(0.5)
+        form5.to_corner(UP + RIGHT)
+
+        # show a graph of how this behaves in general
+        # create the axes and the curve
+        ax = Axes(x_range=[-1, 10], y_range=[-1, 10])
+        graph = ax.get_graph(lambda n: (n * 1)/(1 + (1.0/7)*(n-1) + 0*n*(n-1)), color=BLUE, x_range=[0, 100])
+        self.add(ax, graph)
+
+        self.play(Wait(15))
+
+
 class MainScene(Scene):
     def construct(self):
         # Define gamma
@@ -76,7 +96,7 @@ class MainScene(Scene):
             sqs = []
             lastsq = None
             for i in range(0,7):
-                sq = Square(color=BLUE)
+                sq = Square(color=BLUE,fill_opacity=1)
                 sq.set_fill(BLUE)
                 sq.scale(0.1)
                 self.play(Write(sq))
@@ -104,7 +124,8 @@ class MainScene(Scene):
         blist = BulletedList(
             "There are 6 workers to do work at the same time",
             "1/7 of the work is serial",
-            "28/6 * (1 + (1/7)(6-1)) = 8"
+            "28/6 * (1 + (1/7)(6-1)) = 8",
+            "One processor takes 42 units of time"
         )
         blist.scale(0.5)
         self.add(blist)
@@ -113,11 +134,13 @@ class MainScene(Scene):
 
         # Define alpha and beta
         formExample = MathTex(
-            r"\underbrace{T_6}_{6\ \text{Worker Time}} = \underbrace{\frac{42}{6}}_{\text{Time Per Processor}} * \underbrace{(1 + \frac{1}{7}\ (6 - 1) + 0 * 6(6-1))}_{\text{Time Expansion}} = 8"
+            r"T_1 = 42, \underbrace{T_6}_{6\ \text{Worker Time}} = \underbrace{\frac{42}{6}}_{\text{Time Per Processor}} * \underbrace{(1 + \frac{1}{7}\ (6 - 1) + 0 * 6(6-1))}_{\text{Time Expansion}} = 8"
         )
         formExample.scale(0.5)
         self.play(Write(formExample))
         self.play(Wait(15))
+
+        self.play(FadeOut(formExample))
 
         # Wait for end
         self.play(Wait(10))

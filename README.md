@@ -9,4 +9,5 @@ for final editing (adding music, voiceover, and video camera input).
 
 ```
 ./runit MainScene && ./showit MainScene
+./runit Xput && ./showit Xput
 ```
