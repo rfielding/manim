@@ -1,7 +1,16 @@
 from manim import *
 import math
 
-            
+class ResistingParallelism(Scene):
+    def construct(self):
+        title = MathTex(r"\text{How Work Resists Parallelism}") 
+        self.play(Write(title))
+        subtitle = MathTex(r"\text{The Universal Scaling Law}") 
+        subtitle.shift(DOWN*1)
+        subtitle.scale(0.5)
+        self.play(Write(subtitle))
+        self.play(Wait(2))
+
 class Xput(Scene):
     def construct(self):
         # Throughput
@@ -46,7 +55,7 @@ class Xput(Scene):
         self.usl(ax,14,800,1.0)
         self.usl(ax,28,800,1.0)
 
-        self.play(Wait(15))
+        self.play(Wait(5))
 
     def meetings(self, n):
         participants = []
@@ -196,6 +205,7 @@ class MainScene(Scene):
             "There are 6 workers to do work at the same time",
             "1/7 of the work is serial",
             "28/6 * (1 + (1/7)(6-1)) = 8",
+            "6 processors takes 8 units of time, to do 42 units of work",
             "One processor takes 42 units of time"
         )
         blist.scale(0.5)
